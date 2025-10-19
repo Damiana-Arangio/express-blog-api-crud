@@ -9,14 +9,47 @@ const posts = require ('../data/posts.js')              // Import dei dati della
 
 // index - mostra tutte le ricette
 function index (req, res) {
-    res.json(posts)
+
+    let postsfiltrato = posts;
+
+    /*
+        Se è stata passata una query string "tags":
+        - Filtra l'array posts in base al tag specificato
+        - Sovrascrivi la variabile "postsFiltrati" con i risultati filtrati
+    */
+    if(req.query.tags) {
+        postsfiltrato = posts.filter( 
+            (post) => post.tags.includes(req.query.tags)
+        )
+    };
+
+    res.json(postsfiltrato)                                 // Invia al client lista completa o filtrata delle ricette
 }
 
 // show - mostra una ricetta specifica
 function show(req, res) {
     const id = parseInt(req.params.id) ;                  // Recupera stringa "id" dall'URL e la converte in numero
     const post = posts.find(post => post.id === id);      // Cerca ricetta con l'id specificato nell'array "posts"
-    res.json(post);                                       // Invia ricetta trovata al client
+
+    /* Se la ricetta non esiste:
+      - Imposta codice di stato HTTP 404 
+      - Invia al client messaggio d'errore
+      - Termina l'esecuzione della funzione show
+   */
+    if (!post)
+        return res.status(404).json(
+            {
+                status: 404,
+                error: "Not Found",
+                message: "Ricetta non trovata"
+            }
+        )
+
+    /* 
+        Se la ricetta esiste:
+        - Invia al client la ricetta trovata 
+    */
+    res.json(post);
 }
 
 // store - crea una nuova ricetta
@@ -39,10 +72,10 @@ function destroy(req, res) {
     const id = parseInt(req.params.id);                   // Recupera stringa "id" dall'URL e la converte in numero
     const post = posts.find(post => post.id === id);      // Cerca ricetta con l'id specificato nell'array "posts"
 
-    /* Se la ricetta non esiste: 
+    /* Se la ricetta non esiste:
        - Imposta codice di stato HTTP 404 
        - Invia al client messaggio d'errore
-       - Esci dalla funzione destroy
+       - Termina l'esecuzione della funzione destroy
     */
     if(!post)
         return res.status(404).json (
