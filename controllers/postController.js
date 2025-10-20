@@ -54,8 +54,19 @@ function show(req, res) {
 
 // store - crea una nuova ricetta
 function store(req, res) {
-    console.log(req.body);             // Stampa nel terminale il corpo della richiesta in arrivo dal client
-    res.send("Creata nuova ricetta");
+    const newId = posts[posts.length - 1].id + 1;    // Crea un nuovo id per la ricetta da aggiungere
+    const newPost = {                               // Crea un nuovo oggetto ricetta recuperando i dati dal corpo della richiesta
+        id: newId,
+        title: req.body.title,
+        content: req.body.content,
+        images: req.body.image,    
+        tags: req.body.tags
+    };
+
+    posts.push(newPost);              // Aggiunge la nuova ricetta all'array delle ricette
+    console.log(newPost);             // Stampa nel terminale l'array aggiornato
+    res.status(201).json(newPost) ;   /* Invia al client la nuova ricetta con codice di stato HTTP 201 (Created)
+                                         per comunicare l'avvenuto successo della richiesta */
 }
 
 // update - Aggiorna una ricetta
@@ -90,7 +101,7 @@ function destroy(req, res) {
     /* 
         Se la ricetta esiste:
         - Elimina post dall'array posts
-        - Invia al client codice di stato http 204 (nessun contenuto)
+        - Invia al client codice di stato http 204 (No Content)
           per comunicare l'esito positivo della richiesta
     */
    posts.splice(posts.indexOf(post), 1)
