@@ -10,14 +10,15 @@ const postsRouter = require('./routers/postsRouter')    // Import del router che
 /***************************
     CONFIGURAZIONE EXPRESS
 ****************************/
-const app = express()            // Inizializzazione dell'app Express
+const app = express();           // Inizializzazione dell'app Express
 const port = 3000;               // Definizione della porta su cui il server deve rimanere in ascolto
 
 
-/************
-    ROUTER
-************/
-app.use('/posts', postsRouter)  // Registrazione del router con prefisso /posts 
+/***************
+    MIDDLEWARE
+****************/
+app.use(express.json());          // Registrazione body-parser per "application/json"
+app.use('/posts', postsRouter);   // Registrazione del router con prefisso /posts 
 
 
 /*********************

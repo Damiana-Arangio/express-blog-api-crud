@@ -54,6 +54,7 @@ function show(req, res) {
 
 // store - crea una nuova ricetta
 function store(req, res) {
+    console.log(req.body);             // Stampa nel terminale il corpo della richiesta in arrivo dal client
     res.send("Creata nuova ricetta");
 }
 
