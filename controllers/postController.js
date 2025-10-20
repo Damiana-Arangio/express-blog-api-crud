@@ -59,7 +59,7 @@ function store(req, res) {
         id: newId,
         title: req.body.title,
         content: req.body.content,
-        images: req.body.image,    
+        image: req.body.image,    
         tags: req.body.tags
     };
 
@@ -71,7 +71,32 @@ function store(req, res) {
 
 // update - Aggiorna una ricetta
 function update(req, res) {
-    res.send("Aggiornata ricetta " + req.params.id);
+    const id = parseInt(req.params.id);                   // Recupera stringa "id" dall'URL e la converte in numero
+    const post = posts.find(post => post.id === id);      // Cerca ricetta con l'id specificato nell'array "posts"
+
+    /* Se la ricetta non esiste:
+       - Imposta codice di stato HTTP 404 
+       - Invia al client messaggio d'errore  
+       - Termina l'esecuzione della funzione update
+    */
+    if(!post)
+        return res.status(404).json (
+            { 
+                status: 404,
+                error: "Not Found" , 
+                message: "Ricetta non trovata"
+            }
+        )  
+    /*
+        Se la ricetta esiste:
+        - Aggiorna i campi della ricetta con i dati ricevuti nel corpo della richiesta
+    */
+    post.title = req.body.title;
+    post.content = req.body.content;
+    post.image = req.body.image;
+    post.tags = req.body.tags;
+
+    console.log(post);               // Stampa nel terminale l'array aggiornato
 }
 
 // modify - Modifica una ricetta
