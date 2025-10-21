@@ -5,7 +5,8 @@
 ************/
 const express = require('express')                      // Import del modulo Express
 const chalk = require('chalk');                         // Import del pacchetto chalk
-const postsRouter = require('./routers/postsRouter')    // Import del router che gestisce le rotte dei post
+const postsRouter = require('./routers/postsRouter');    // Import del router che gestisce le rotte dei post
+const errorServer = require('./controllers/middlewares/errorServer');
 
 /***************************
     CONFIGURAZIONE EXPRESS
@@ -19,6 +20,9 @@ const port = 3000;               // Definizione della porta su cui il server dev
 ****************/
 app.use(express.json());          // Registrazione body-parser per "application/json"
 app.use('/posts', postsRouter);   // Registrazione del router con prefisso /posts 
+app.use(errorServer);             // Registrazione del middleware "errorServer" che gestisce gli errori interni del server 
+
+
 
 
 /*********************
